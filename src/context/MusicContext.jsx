@@ -9,74 +9,102 @@ export const MusicProvider = ({ children }) => {
   const playerRef = useRef(null);
   const hasInteractedRef = useRef(false);
 
-  // Load YouTube IFrame API dynamically
+  // Initialize YouTube IFrame Player API
   useEffect(() => {
-    // 1. Function to create player once API is ready
-    const initPlayer = () => {
+    let checkTimer = null;
+
+    const createPlayer = () => {
+      const el = document.getElementById('youtube-player-container');
+      if (!el) return false;
+
       if (window.YT && window.YT.Player) {
-        playerRef.current = new window.YT.Player('youtube-player-container', {
-          height: '1',
-          width: '1',
-          videoId: YOUTUBE_VIDEO_ID,
-          playerVars: {
-            autoplay: 1,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            loop: 1,
-            playlist: YOUTUBE_VIDEO_ID, // Required for loop in YT API
-            modestbranding: 1,
-            rel: 0,
-            showinfo: 0,
-            enablejsapi: 1,
-            origin: window.location.origin
-          },
-          events: {
-            onReady: (event) => {
-              setIsPlayerReady(true);
-              event.target.setVolume(30); // 30% background volume
-              // Attempt immediate autoplay
-              try {
-                event.target.playVideo();
-              } catch (e) {
-                console.log("Initial autoplay prevented by browser policy:", e);
-              }
+        try {
+          playerRef.current = new window.YT.Player('youtube-player-container', {
+            height: '200',
+            width: '200',
+            videoId: YOUTUBE_VIDEO_ID,
+            playerVars: {
+              autoplay: 1,
+              controls: 0,
+              disablekb: 1,
+              fs: 0,
+              loop: 1,
+              playlist: YOUTUBE_VIDEO_ID, // Required for looping in YouTube API
+              modestbranding: 1,
+              rel: 0,
+              showinfo: 0,
+              enablejsapi: 1,
+              playsinline: 1
             },
-            onStateChange: (event) => {
-              // event.data === 1 is YT.PlayerState.PLAYING
-              if (event.data === 1) {
-                setIsPlaying(true);
-              } else if (event.data === 2 || event.data === 0) {
-                // YT.PlayerState.PAUSED or ENDED
-                setIsPlaying(false);
+            events: {
+              onReady: (event) => {
+                setIsPlayerReady(true);
+                try {
+                  event.target.setVolume(30); // 30% background volume
+                  event.target.playVideo();
+                } catch (e) {
+                  console.log("Autoplay blocked by browser policy:", e);
+                }
+              },
+              onStateChange: (event) => {
+                // 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+                if (event.data === 1) {
+                  setIsPlaying(true);
+                } else if (event.data === 2 || event.data === 0) {
+                  setIsPlaying(false);
+                }
               }
             }
-          }
-        });
+          });
+          return true;
+        } catch (err) {
+          console.warn("Failed to instantiate YT.Player:", err);
+          return false;
+        }
       }
+      return false;
     };
 
+    // Load API script if not present
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
       const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      if (firstScriptTag && firstScriptTag.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        document.head.appendChild(tag);
+      }
 
       window.onYouTubeIframeAPIReady = () => {
-        initPlayer();
+        createPlayer();
       };
     } else {
-      initPlayer();
+      createPlayer();
     }
 
+    // Poll to ensure container is ready if API loaded before DOM mount
+    checkTimer = setInterval(() => {
+      if (!playerRef.current && window.YT && window.YT.Player) {
+        if (createPlayer()) {
+          clearInterval(checkTimer);
+        }
+      } else if (playerRef.current) {
+        clearInterval(checkTimer);
+      }
+    }, 300);
+
     return () => {
-      if (playerRef.current && playerRef.current.destroy) {
-        playerRef.current.destroy();
+      if (checkTimer) clearInterval(checkTimer);
+      if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+        try {
+          playerRef.current.destroy();
+        } catch (e) {}
       }
     };
   }, []);
 
-  // Global First User Interaction Listener to unlock audio if autoplay was blocked
+  // Global First Interaction Listener to trigger play on first user click if autoplay was blocked
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (hasInteractedRef.current) return;
@@ -88,28 +116,31 @@ export const MusicProvider = ({ children }) => {
           hasInteractedRef.current = true;
           setIsPlaying(true);
         } catch (e) {
-          console.warn("Error playing YouTube video on user interaction:", e);
+          console.warn("Error playing video on user interaction:", e);
         }
       }
 
-      // Remove listeners once interacted
+      // Cleanup event listeners
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('pointerdown', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
 
     window.addEventListener('click', handleFirstInteraction);
     window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('pointerdown', handleFirstInteraction);
     window.addEventListener('keydown', handleFirstInteraction);
 
     return () => {
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('pointerdown', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
   }, []);
 
-  // Play Music Function
+  // Public Play Command
   const playMusic = () => {
     if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
       try {
@@ -117,24 +148,24 @@ export const MusicProvider = ({ children }) => {
         playerRef.current.playVideo();
         setIsPlaying(true);
       } catch (e) {
-        console.warn("Error calling playVideo:", e);
+        console.warn("Error in playMusic:", e);
       }
     }
   };
 
-  // Pause Music Function
+  // Public Pause Command
   const pauseMusic = () => {
     if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
       try {
         playerRef.current.pauseVideo();
         setIsPlaying(false);
       } catch (e) {
-        console.warn("Error calling pauseVideo:", e);
+        console.warn("Error in pauseMusic:", e);
       }
     }
   };
 
-  // Toggle Play / Pause
+  // Toggle Command
   const toggleMusic = () => {
     if (isPlaying) {
       pauseMusic();
@@ -145,8 +176,8 @@ export const MusicProvider = ({ children }) => {
 
   return (
     <MusicContext.Provider value={{ isPlaying, isPlayerReady, playMusic, pauseMusic, toggleMusic }}>
-      {/* Hidden YouTube Container */}
-      <div className="fixed top-0 left-0 w-1 h-1 opacity-0 pointer-events-none overflow-hidden z-0">
+      {/* Off-screen persistent YouTube container */}
+      <div className="fixed -bottom-96 -right-96 w-48 h-48 opacity-0 pointer-events-none overflow-hidden z-0">
         <div id="youtube-player-container" />
       </div>
       {children}
