@@ -60,10 +60,10 @@ export const Page2Blessing = () => {
         </p>
 
         {/* Next Button */}
-        <div className="pt-4 border-t border-[#D1DFC8]/60 flex justify-center">
+        <div className="pt-4 border-t border-[#D1DFC8]/60 flex justify-center relative z-20">
           <button
-            onClick={() => navigate('/postcard')}
-            className="group relative inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#789461] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#688252] transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            onClick={() => navigate('/birthday')}
+            className="group relative inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#789461] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#688252] transition-all hover:scale-105 active:scale-95 cursor-pointer z-30"
           >
             <span>{cfg.buttonText}</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
