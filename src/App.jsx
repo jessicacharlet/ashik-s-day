@@ -1,71 +1,54 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { BirthdayLoader } from './components/BirthdayLoader';
-import { PostcardReveal } from './components/PostcardReveal';
-import { BirthdayReveal } from './components/BirthdayReveal';
-import { BibleVerse } from './components/BibleVerse';
-import { BirthdayWishes } from './components/BirthdayWishes';
-import { SurpriseEnvelope } from './components/SurpriseEnvelope';
-import { FinalCard } from './components/FinalCard';
+import { Page1Loading } from './pages/Page1Loading';
+import { Page2Blessing } from './pages/Page2Blessing';
+import { Page3Postcard } from './pages/Page3Postcard';
+import { Page4Birthday } from './pages/Page4Birthday';
+import { Page5Cake } from './pages/Page5Cake';
+import { Page6Funny } from './pages/Page6Funny';
+import { Page7Final } from './pages/Page7Final';
 import { MusicPlayer } from './components/MusicPlayer';
 
-export function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isPostcardSettled, setIsPostcardSettled] = useState(false);
+function AnimatedRoutes() {
+  const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#4A3E3D] relative font-sans antialiased overflow-x-hidden selection:bg-[#FAD6C5] selection:text-[#6B4E3D]">
-      {/* Paper texture dotted background grid */}
-      <div className="fixed inset-0 bg-[radial-gradient(#E8E2D7_0.75px,transparent_0.75px)] [background-size:28px_28px] opacity-60 pointer-events-none z-0" />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+        className="w-full min-h-screen"
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Page1Loading />} />
+          <Route path="/blessing" element={<Page2Blessing />} />
+          <Route path="/postcard" element={<Page3Postcard />} />
+          <Route path="/birthday" element={<Page4Birthday />} />
+          <Route path="/cake" element={<Page5Cake />} />
+          <Route path="/funny" element={<Page6Funny />} />
+          <Route path="/final" element={<Page7Final />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
-      {/* Floating Audio Controller */}
-      <MusicPlayer />
+export function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-[#FAF7F2] text-[#4A3E3D] relative font-sans antialiased overflow-x-hidden selection:bg-[#FAD6C5] selection:text-[#6B4E3D]">
+        {/* Audio Floating Controller */}
+        <MusicPlayer />
 
-      {/* 1. LOADING EXPERIENCE */}
-      <AnimatePresence>
-        {isLoading && (
-          <BirthdayLoader onComplete={() => setIsLoading(false)} />
-        )}
-      </AnimatePresence>
-
-      {/* 2. MAIN HANDMADE SCRAPBOOK EXPERIENCE */}
-      {!isLoading && (
-        <main className="relative z-10 space-y-12 sm:space-y-16 pb-12 pt-6">
-
-          {/* DUAL-PHOTO DRAGGING POSTCARD REVEAL */}
-          <PostcardReveal onSettled={() => setIsPostcardSettled(true)} />
-
-          {/* SECTIONS REVEALED ONLY AFTER POSTCARDS SETTLE */}
-          <AnimatePresence>
-            {isPostcardSettled && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                className="space-y-12 sm:space-y-16"
-              >
-                {/* BIRTHDAY REVEAL */}
-                <BirthdayReveal />
-
-                {/* BIBLE VERSE BLESSING */}
-                <BibleVerse />
-
-                {/* 4 HANDMADE WISH STATIONERY NOTES */}
-                <BirthdayWishes />
-
-                {/* SURPRISE ENVELOPE INTERACTION */}
-                <SurpriseEnvelope />
-
-                {/* FINAL SCRAPBOOK CARD */}
-                <FinalCard />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-        </main>
-      )}
-    </div>
+        {/* Animated Page Transitions */}
+        <AnimatedRoutes />
+      </div>
+    </BrowserRouter>
   );
 }
 

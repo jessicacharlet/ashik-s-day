@@ -1,43 +1,39 @@
 /**
  * ====================================================================
- * WARM HANDMADE DIGITAL POSTCARD CONFIGURATION
+ * MULTI-PAGE BIRTHDAY CARD CONFIGURATION
  * ====================================================================
- * All text, name, photos, captions, and wishes can be customized here!
+ * Single configuration file for all 7 pages!
  */
 
 export const BIRTHDAY_CONFIG = {
-  // 1. Friend & Primary Photos
+  // Primary Friend & Photo Details
   FRIEND_NAME: "Ashik",
   BIRTHDAY_YEAR: "2026",
 
-  // Photo Cards (Both sit side-by-side on the postcard table!)
   MY_PHOTO: "/me.jpg",
   FRIEND_PHOTO: "/friend.jpg",
 
   MY_CAPTION: "Me ✨",
   FRIEND_CAPTION: "Birthday Boy 🎂",
 
-  // 2. Loading Experience Steps (1-second intervals)
-  LOADING_SEQUENCE: [
-    { title: "Preparing something special...", subtitle: "Please wait ✨" },
-    { title: "Finding the perfect memory...", subtitle: "Hold on tight 📸" },
-    { title: "Adding a little love...", subtitle: "Sprinkling stardust 💕" },
-    { title: "Almost ready...", subtitle: "Here comes the postcard! 💌" }
-  ],
-
-  // 3. Postcard Connector Text
-  POSTCARD_CONNECTOR: "Two people.\nOne beautiful friendship.",
-
-  // 4. Birthday Reveal
-  BIRTHDAY_REVEAL: {
-    readyNotice: "Okay... the postcard is ready 💌",
-    heading: "Happy Birthday!",
-    subtext: "May this year bring you more laughter, more adventures, and more beautiful memories."
+  // PAGE 1: Loading
+  PAGE_1_LOADING: {
+    heading: "Preparing something special... 💌",
+    subtext: "Just for you",
+    readyText: "Ready? ✨",
+    buttonText: "Open Your Birthday Card →",
+    sequence: [
+      "Preparing something special... 💌",
+      "Finding the perfect memory... 📸",
+      "Adding a little love... 💕",
+      "Almost ready... ✨"
+    ]
   },
 
-  // 5. Bible Blessing Card
-  BIBLE_VERSE: {
-    heading: "A little blessing for your new year 🤍",
+  // PAGE 2: Bible Blessing
+  PAGE_2_BLESSING: {
+    heading: "Before the birthday wishes... 🤍",
+    subheading: "A little blessing for you",
     lines: [
       "May the Lord bless you and keep you;",
       "the Lord make his face shine on you",
@@ -45,68 +41,69 @@ export const BIRTHDAY_CONFIG = {
       "the Lord turn his face toward you",
       "and give you peace."
     ],
-    reference: "— Numbers 6:24–26"
+    reference: "— Numbers 6:24–26",
+    buttonText: "Next →"
   },
 
-  // 6. 4 Handmade Wish Stationery Notes
-  WISHES: [
-    {
-      id: "happiness",
-      icon: "Smile",
-      emoji: "🌿",
-      title: "Happiness",
-      message: "May you always have reasons to smile, laughter in your heart, and light in every room you enter.",
-      paperColor: "paper-card-sage",
-      accentColor: "text-[#789461]",
-      tapeColor: "washi-tape-sage"
-    },
-    {
-      id: "peace",
-      icon: "Heart",
-      emoji: "🕊️",
-      title: "Peace",
-      message: "May your heart always find peace, stillness, and comfort even during challenging seasons.",
-      paperColor: "paper-card-peach",
-      accentColor: "text-[#F88379]",
-      tapeColor: "washi-tape-peach"
-    },
-    {
-      id: "success",
-      icon: "Sparkles",
-      emoji: "🚀",
-      title: "Success",
-      message: "May you achieve everything you're working for, and may every dream yield beautiful fruit.",
-      paperColor: "paper-card-lavender",
-      accentColor: "text-[#8B5CF6]",
-      tapeColor: "washi-tape-coral"
-    },
-    {
-      id: "blessings",
-      icon: "Sun",
-      emoji: "✨",
-      title: "Blessings",
-      message: "May God guide and protect you wherever you go, illuminating your path with wisdom and grace.",
-      paperColor: "paper-card",
-      accentColor: "text-[#6B4E3D]",
-      tapeColor: "washi-tape-sage"
-    }
-  ],
-
-  // 7. Surprise Envelope Interaction
-  SURPRISE_ENVELOPE: {
-    prompt: "There's one more thing...",
-    buttonText: "Open it 💌",
-    letterMessage: "Whatever happens in the coming years, I hope we keep making memories worth remembering.\n\nHappy Birthday once again ❤️"
+  // PAGE 3: Postcard Photo Reveal
+  PAGE_3_POSTCARD: {
+    readyNote: "Okay... now we're ready 🎀",
+    buttonText: "Next →"
   },
 
-  // 8. Final Scrapbook Card
-  FINAL_CARD: {
-    heading: "Happy Birthday,",
-    blessing: "May God bless your journey, your dreams, and everything that's ahead.",
+  // PAGE 4: Birthday Reveal
+  PAGE_4_BIRTHDAY: {
+    waitText: "Wait...",
+    forgetText: "I almost forgot something...",
+    revealBig: "IT'S YOUR BIRTHDAY!!! 🎉",
+    heading: "HAPPY BIRTHDAY",
+    wishesText: "May this year bring you lots of happiness, success, laughter and unforgettable memories.",
+    buttonText: "There's More →"
+  },
+
+  // PAGE 5: Blow the Candles
+  PAGE_5_CAKE: {
+    heading: "Make a Wish 🎂",
+    subheading: "Your birthday cake is ready...",
+    instruction: "Close your eyes... Make a wish... and blow the candles! 🕯️",
+    micButtonText: "Blow the Candles 🎤",
+    tapButtonText: "Tap to Blow 💨",
+    successHeading: "YOU DID IT! 🎉",
+    successSubtext: "May God make your wishes come true. ✨",
+    wishMadeText: "Wish made. ✨",
+    wishTurnText: "May God turn it into reality.",
+    buttonText: "Next →"
+  },
+
+  // PAGE 6: Funny Surprise Report
+  PAGE_6_FUNNY: {
+    heading: "Okay... enough emotional stuff 😂",
+    reportTitle: "BIRTHDAY BOY REPORT",
+    stats: [
+      { label: "AGE", value: "+1" },
+      { label: "WISDOM", value: "Loading..." },
+      { label: "MONEY", value: "Error 404" },
+      { label: "MATURITY", value: "Not Found" },
+      { label: "CAKE", value: "100% 🍰" },
+      { label: "ENERGY", value: "Depends on WiFi" }
+    ],
+    overallResult: "Overall Result:\nStill the same idiot ❤️😂",
+    buttonText: "One Last Thing →"
+  },
+
+  // PAGE 7: Final Surprise Letter
+  PAGE_7_FINAL: {
+    heading: "One last thing... 💌",
+    openButtonText: "Open it",
+    letterParagraphs: [
+      "Whatever this year brings, I hope you keep smiling, keep growing, keep dreaming, and keep trusting God.",
+      "May this new chapter of your life be even better than the last.",
+      "Happy Birthday ❤️"
+    ],
     footer: "Made with love, just for you ♡"
   },
 
-  // 9. Audio Settings
+  // Audio settings
   AUDIO: {
     customUrl: null,
     useSynthFallback: true
