@@ -100,6 +100,21 @@ export const BIRTHDAY_CONFIG = {
     footer: "Made with love, just for you ♡"
   },
 
+  // WEBCAM SURPRISE SECTION (Page 7 Final Page)
+  WEBCAM_SECTION: {
+    prompt: "Wait... one last surprise 👀",
+    subprompt: "Let's capture this moment 📸",
+    openCameraButton: "Open Camera 📷",
+    smileText: "Smile, Chips Vaaya! 😄📸",
+    captureButton: "Capture! 📸",
+    gotItText: "Got it! 😂❤️",
+    capturedNotice: "Birthday memory captured 📸❤️",
+    deniedText: "Looks like the camera is shy 😂",
+    deniedSubtext: "No worries, the birthday wishes still count! ❤️",
+    tryAgainButton: "Try Again 📷",
+    finishButton: "Finish →"
+  },
+
   // Audio settings
   AUDIO: {
     customUrl: null,
