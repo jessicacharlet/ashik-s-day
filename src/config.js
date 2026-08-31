@@ -36,9 +36,23 @@ export const BIRTHDAY_CONFIG = {
     subtext: "Now let's begin..."
   },
 
-  // PAGE 3: Bible Blessing
+  // PAGE 3: Bible Blessing (Configured for both PAGE_2_BLESSING and PAGE_3_BLESSING for safety)
+  PAGE_2_BLESSING: {
+    heading: "Before the birthday wishes... 🤍",
+    subheading: "A Little Blessing For You",
+    lines: [
+      "May the Lord bless you and keep you;",
+      "the Lord make his face shine on you",
+      "and be gracious to you;",
+      "the Lord turn his face toward you",
+      "and give you peace."
+    ],
+    reference: "— Numbers 6:24–26",
+    buttonText: "Next →"
+  },
   PAGE_3_BLESSING: {
     heading: "Before the birthday wishes... 🤍",
+    subheading: "A Little Blessing For You",
     lines: [
       "May the Lord bless you and keep you;",
       "the Lord make his face shine on you",
