@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Heart, Sparkles, CheckCircle2 } from 'lucide-react';
 import { BIRTHDAY_CONFIG } from '../config';
 
 export const Page3Postcard = () => {
@@ -11,19 +11,24 @@ export const Page3Postcard = () => {
 
   const myPhoto = BIRTHDAY_CONFIG.MY_PHOTO;
   const friendPhoto = BIRTHDAY_CONFIG.FRIEND_PHOTO;
+  const cfg = BIRTHDAY_CONFIG.PAGE_2_POSTCARD;
 
   useEffect(() => {
     // 1. Wait 1 second after page opens, then start dragging MY PHOTO from LEFT to RIGHT
     const t1 = setTimeout(() => setStage('dragging'), 1000);
 
-    // 2. Arrives at destination after 3.8 seconds
-    const t2 = setTimeout(() => setStage('delivered'), 4500);
+    // 2. Arrives at destination after dragging
+    const t2 = setTimeout(() => {
+      setStage('delivered');
+      // Automatically navigate to /blessing after delivery!
+      setTimeout(() => navigate('/blessing'), 2200);
+    }, 4500);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, []);
+  }, [navigate]);
 
   const isDragging = stage === 'dragging';
   const isDelivered = stage === 'delivered';
@@ -48,7 +53,7 @@ export const Page3Postcard = () => {
             <span>Postcard Journey</span>
           </div>
           <h2 className="font-handwriting text-3xl sm:text-5xl text-[#6B4E3D] font-bold">
-            Sending a little birthday surprise... 💌
+            {cfg.heading}
           </h2>
         </motion.div>
 
@@ -63,7 +68,7 @@ export const Page3Postcard = () => {
             <div className="w-4 h-4 rounded-full bg-[#789461] border-2 border-white shadow-xs" />
 
             {/* Track Line with Decorative Symbols */}
-            <div className="flex-1 mx-2 h-[2px] bg-dashed border-b-2 border-dashed border-[#D5CBB5] relative flex items-center justify-around">
+            <div className="flex-1 mx-2 h-[2px] border-b-2 border-dashed border-[#D5CBB5] relative flex items-center justify-around">
               <span className="font-doodle text-xs text-[#F88379] opacity-70">♡</span>
               <span className="font-doodle text-xs text-[#789461] opacity-70">✿</span>
               <span className="font-doodle text-xs text-[#8B5CF6] opacity-70">✨</span>
@@ -84,7 +89,6 @@ export const Page3Postcard = () => {
                 animate={
                   isDelivered
                     ? {
-                        // Positioned right next to Ashik's photo on desktop/mobile
                         x: typeof window !== 'undefined' && window.innerWidth < 640 ? 110 : 380,
                         y: 0,
                         rotate: -3
@@ -99,7 +103,7 @@ export const Page3Postcard = () => {
                 }
                 transition={{
                   duration: isDragging ? 3.5 : 0.8,
-                  ease: [0.34, 1.56, 0.64, 1] // Spring bounce overshoot physics!
+                  ease: [0.34, 1.56, 0.64, 1] // Spring bounce overshoot physics
                 }}
                 className="relative cursor-default"
               >
@@ -132,7 +136,7 @@ export const Page3Postcard = () => {
                   </div>
                   <div className="pt-2 text-center">
                     <p className="font-handwriting text-xl sm:text-2xl text-[#6B4E3D] font-bold">
-                      From me 💌
+                      {BIRTHDAY_CONFIG.MY_CAPTION}
                     </p>
                   </div>
                 </div>
@@ -162,7 +166,7 @@ export const Page3Postcard = () => {
                 </div>
                 <div className="pt-2 text-center">
                   <p className="font-handwriting text-xl sm:text-2xl text-[#6B4E3D] font-bold">
-                    Ashik 🎂
+                    {BIRTHDAY_CONFIG.FRIEND_CAPTION}
                   </p>
                 </div>
               </div>
@@ -172,7 +176,7 @@ export const Page3Postcard = () => {
         </div>
 
         {/* ================================================== */}
-        {/* DESTINATION MESSAGES & NEXT BUTTON */}
+        {/* DESTINATION MESSAGES */}
         {/* ================================================== */}
         <AnimatePresence>
           {isDelivered && (
@@ -180,27 +184,16 @@ export const Page3Postcard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center space-y-4 pt-2"
+              className="text-center space-y-2 pt-2"
             >
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EBF1E8] border border-[#D1DFC8] text-[#789461] text-sm font-handwriting font-bold">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Delivered! 💌</span>
+                <span>{cfg.deliveredText}</span>
               </div>
 
               <p className="font-serif italic text-xl sm:text-2xl text-[#4A3E3D]">
-                "Your birthday surprise has arrived."
+                "{cfg.subtext}"
               </p>
-
-              {/* NEXT BUTTON (Only appears AFTER dragging finishes!) */}
-              <div className="pt-2">
-                <button
-                  onClick={() => navigate('/birthday')}
-                  className="group relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#789461] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#688252] transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                >
-                  <span>Next</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
             </motion.div>
           )}
         </AnimatePresence>

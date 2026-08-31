@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Sparkles, ArrowRight } from 'lucide-react';
+import { Heart, Sparkles } from 'lucide-react';
 import { BIRTHDAY_CONFIG } from '../config';
 import { useMusic } from '../context/MusicContext';
 
@@ -10,29 +10,27 @@ export const Page1Loading = () => {
   const { playMusic } = useMusic();
   const cfg = BIRTHDAY_CONFIG.PAGE_1_LOADING;
 
-  const handleOpenCard = () => {
-    playMusic();
-    navigate('/blessing');
-  };
-
   const [stepIndex, setStepIndex] = useState(0);
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    // Start ambient music softly on mount if allowed
+    playMusic();
+
     const timer = setInterval(() => {
       setStepIndex((prev) => {
         if (prev < cfg.sequence.length - 1) {
           return prev + 1;
         } else {
           clearInterval(timer);
-          setIsReady(true);
+          // Automatically navigate to /postcard after loading completes!
+          setTimeout(() => navigate('/postcard'), 800);
           return prev;
         }
       });
-    }, 1100);
+    }, 900);
 
     return () => clearInterval(timer);
-  }, [cfg.sequence.length]);
+  }, [cfg.sequence.length, navigate, playMusic]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative select-none overflow-hidden bg-[#FAF7F2]">
@@ -66,56 +64,32 @@ export const Page1Loading = () => {
         {/* Handwritten Status Transitions */}
         <div className="min-h-[90px] flex flex-col justify-center">
           <AnimatePresence mode="wait">
-            {!isReady ? (
-              <motion.div
-                key={stepIndex}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-1"
-              >
-                <h2 className="font-handwriting text-3xl sm:text-4xl text-[#6B4E3D] font-bold">
-                  {cfg.sequence[stepIndex]}
-                </h2>
-                <p className="font-doodle text-sm text-[#789461] font-medium">
-                  {cfg.subtext}
-                </p>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="space-y-1"
-              >
-                <h2 className="font-handwriting text-4xl text-[#789461] font-bold">
-                  {cfg.readyText}
-                </h2>
-                <p className="font-serif italic text-base text-[#4A3E3D]">
-                  Your handmade birthday card is ready to open.
-                </p>
-              </motion.div>
-            )}
+            <motion.div
+              key={stepIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-1"
+            >
+              <h2 className="font-handwriting text-3xl sm:text-4xl text-[#6B4E3D] font-bold">
+                {cfg.sequence[stepIndex]}
+              </h2>
+              <p className="font-doodle text-sm text-[#789461] font-medium">
+                {cfg.subtext}
+              </p>
+            </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Open Card Button (Shown after loading finishes) */}
-        {isReady && (
+        <div className="w-full bg-[#EAE3D2] h-2 rounded-full overflow-hidden p-0.5 border border-[#D5CBB5]">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="pt-2"
-          >
-            <button
-              onClick={handleOpenCard}
-              className="group relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#F88379] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#e76e64] transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              <span>{cfg.buttonText}</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </motion.div>
-        )}
+            initial={{ width: '0%' }}
+            animate={{ width: `${((stepIndex + 1) / cfg.sequence.length) * 100}%` }}
+            transition={{ duration: 0.8 }}
+            className="h-full bg-gradient-to-r from-[#789461] via-[#F88379] to-[#8B5CF6] rounded-full"
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Heart, Sparkles, Flower2 } from 'lucide-react';
+import { Heart, Sparkles, Flower2 } from 'lucide-react';
 import { BIRTHDAY_CONFIG } from '../config';
 
 export const Page7Final = () => {
   const cfg = BIRTHDAY_CONFIG.PAGE_7_FINAL;
-  const friendName = BIRTHDAY_CONFIG.FRIEND_NAME;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,22 +29,6 @@ export const Page7Final = () => {
       </div>
 
       <div className="max-w-2xl w-full text-center space-y-8 z-10 relative">
-
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-1"
-        >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBF1E8] border border-[#D1DFC8] text-[#789461] text-xs font-doodle font-bold uppercase tracking-wider mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Final Gift</span>
-          </div>
-          <h2 className="font-handwriting text-3xl sm:text-5xl text-[#6B4E3D] font-bold">
-            {cfg.heading}
-          </h2>
-        </motion.div>
 
         {/* Envelope Interaction */}
         <div className="relative py-4 flex flex-col items-center">
@@ -72,7 +55,7 @@ export const Page7Final = () => {
                     onClick={() => setIsOpen(true)}
                     className="px-6 py-2.5 rounded-full bg-[#FFFDF9] border border-[#F6D7C8] font-handwriting text-2xl text-[#6B4E3D] font-bold shadow-sm hover:bg-[#F88379] hover:text-white transition-all duration-300"
                   >
-                    {cfg.openButtonText}
+                    Open it 💌
                   </button>
                 </div>
               </div>
@@ -93,16 +76,21 @@ export const Page7Final = () => {
                   <Flower2 className="w-6 h-6 animate-pulse-soft" />
                 </div>
 
-                <div className="space-y-4 text-[#4A3E3D] font-serif text-xl sm:text-2xl leading-relaxed font-light max-w-lg mx-auto">
-                  {cfg.letterParagraphs.map((para, idx) => (
-                    <p key={idx}>"{para}"</p>
-                  ))}
+                {/* EXACT REQUIRED TITLE: HAPPY BIRTHDAY CHIPS VAAYA ❤️ */}
+                <div className="py-2 space-y-1">
+                  <h3 className="font-sans text-xl sm:text-2xl text-[#6B4E3D] uppercase tracking-widest font-extrabold">
+                    {cfg.heading}
+                  </h3>
+                  <h1 className="font-handwriting text-5xl sm:text-7xl text-[#F88379] font-bold tracking-wide leading-tight text-glow-amber">
+                    {cfg.nameTitle}
+                  </h1>
                 </div>
 
-                <div className="py-2">
-                  <span className="font-handwriting text-5xl sm:text-7xl text-[#789461] font-bold block">
-                    {friendName}
-                  </span>
+                {/* BLESSING LINES */}
+                <div className="space-y-2 text-[#4A3E3D] font-serif text-xl sm:text-2xl leading-relaxed font-light max-w-lg mx-auto">
+                  {cfg.blessingLines.map((line, idx) => (
+                    <p key={idx}>{line}</p>
+                  ))}
                 </div>
 
                 <div className="pt-6 border-t border-[#EAE3D2] flex flex-col items-center gap-2">
@@ -110,7 +98,7 @@ export const Page7Final = () => {
                     {cfg.footer}
                   </p>
                   <p className="font-sans text-xs text-[#8B7E74]">
-                    © {BIRTHDAY_CONFIG.BIRTHDAY_YEAR} • Handmade Digital Card
+                    © {BIRTHDAY_CONFIG.BIRTHDAY_YEAR} • Handmade Birthday Surprise
                   </p>
                 </div>
               </motion.div>

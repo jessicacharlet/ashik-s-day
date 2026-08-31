@@ -8,20 +8,19 @@
 export const BIRTHDAY_CONFIG = {
   // Primary Friend & Photo Details
   FRIEND_NAME: "Ashik",
+  FINAL_NAME: "Chips Vaaya",
   BIRTHDAY_YEAR: "2026",
 
   MY_PHOTO: "/me.jpg",
   FRIEND_PHOTO: "/friend.jpg",
 
-  MY_CAPTION: "Me ✨",
-  FRIEND_CAPTION: "Birthday Boy 🎂",
+  MY_CAPTION: "From me 💌",
+  FRIEND_CAPTION: "Ashik 🎂",
 
   // PAGE 1: Loading
   PAGE_1_LOADING: {
     heading: "Preparing something special... 💌",
     subtext: "Just for you",
-    readyText: "Ready? ✨",
-    buttonText: "Open Your Birthday Card →",
     sequence: [
       "Preparing something special... 💌",
       "Finding the perfect memory... 📸",
@@ -30,10 +29,16 @@ export const BIRTHDAY_CONFIG = {
     ]
   },
 
-  // PAGE 2: Bible Blessing
-  PAGE_2_BLESSING: {
+  // PAGE 2: Photo Dragging Postcard
+  PAGE_2_POSTCARD: {
+    heading: "Sending a little birthday surprise... 💌",
+    deliveredText: "Delivered! 💌",
+    subtext: "Now let's begin..."
+  },
+
+  // PAGE 3: Bible Blessing
+  PAGE_3_BLESSING: {
     heading: "Before the birthday wishes... 🤍",
-    subheading: "A little blessing for you",
     lines: [
       "May the Lord bless you and keep you;",
       "the Lord make his face shine on you",
@@ -45,60 +50,52 @@ export const BIRTHDAY_CONFIG = {
     buttonText: "Next →"
   },
 
-  // PAGE 3: Postcard Photo Reveal
-  PAGE_3_POSTCARD: {
-    readyNote: "Okay... now we're ready 🎀",
-    buttonText: "Next →"
-  },
-
   // PAGE 4: Birthday Reveal
   PAGE_4_BIRTHDAY: {
     waitText: "Wait...",
     forgetText: "I almost forgot something...",
     revealBig: "IT'S YOUR BIRTHDAY!!! 🎉",
     heading: "HAPPY BIRTHDAY",
-    wishesText: "May this year bring you lots of happiness, success, laughter and unforgettable memories.",
-    buttonText: "There's More →"
+    wishesText: "May this year bring you happiness, success, laughter and amazing memories.",
+    buttonText: "Next →"
   },
 
   // PAGE 5: Blow the Candles
   PAGE_5_CAKE: {
     heading: "Make a Wish 🎂",
-    subheading: "Your birthday cake is ready...",
-    instruction: "Close your eyes... Make a wish... and blow the candles! 🕯️",
-    micButtonText: "Blow the Candles 🎤",
+    instruction: "Close your eyes... Make a wish... Now blow the candles! 💨",
+    micButtonText: "Blow the Candles 💨",
     tapButtonText: "Tap to Blow 💨",
     successHeading: "YOU DID IT! 🎉",
-    successSubtext: "May God make your wishes come true. ✨",
-    wishMadeText: "Wish made. ✨",
-    wishTurnText: "May God turn it into reality.",
+    successSubtext: "May God make your wish come true. ✨",
     buttonText: "Next →"
   },
 
   // PAGE 6: Funny Surprise Report
   PAGE_6_FUNNY: {
-    heading: "Okay... enough emotional stuff 😂",
+    heading: "Okay... serious wishes are over 😂",
     reportTitle: "BIRTHDAY BOY REPORT",
     stats: [
       { label: "AGE", value: "+1" },
       { label: "WISDOM", value: "Loading..." },
       { label: "MONEY", value: "Error 404" },
       { label: "MATURITY", value: "Not Found" },
-      { label: "CAKE", value: "100% 🍰" },
-      { label: "ENERGY", value: "Depends on WiFi" }
+      { label: "CAKE", value: "100%" },
+      { label: "ENERGY", value: "Depends on WiFi 😂" }
     ],
-    overallResult: "Overall Result:\nStill the same idiot ❤️😂",
+    overallResult: "Still the same guy ❤️",
     buttonText: "One Last Thing →"
   },
 
-  // PAGE 7: Final Surprise Letter
+  // PAGE 7: Final Wish (HAPPY BIRTHDAY CHIPS VAAYA ❤️)
   PAGE_7_FINAL: {
-    heading: "One last thing... 💌",
-    openButtonText: "Open it",
-    letterParagraphs: [
-      "Whatever this year brings, I hope you keep smiling, keep growing, keep dreaming, and keep trusting God.",
-      "May this new chapter of your life be even better than the last.",
-      "Happy Birthday ❤️"
+    heading: "HAPPY BIRTHDAY",
+    nameTitle: "CHIPS VAAYA ❤️",
+    blessingLines: [
+      "May God bless you always,",
+      "guide you in every step,",
+      "and make this year",
+      "one of your best yet. ✨"
     ],
     footer: "Made with love, just for you ♡"
   },
