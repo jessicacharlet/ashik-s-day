@@ -75,3 +75,5 @@ export const triggerWishFireworks = () => {
     });
   }, 250);
 };
+
+export const triggerCakeFireworks = triggerWishFireworks;

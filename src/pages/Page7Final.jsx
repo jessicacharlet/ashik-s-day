@@ -43,7 +43,6 @@ export const Page7Final = () => {
       streamRef.current = stream;
       setCameraState('live');
 
-      // Attach stream to video element
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -59,7 +58,6 @@ export const Page7Final = () => {
   const handleCapture = () => {
     if (!videoRef.current) return;
 
-    // Camera Shutter Flash
     setShowFlash(true);
     setTimeout(() => setShowFlash(false), 400);
 
@@ -69,7 +67,6 @@ export const Page7Final = () => {
     canvas.height = video.videoHeight || 480;
     const ctx = canvas.getContext('2d');
 
-    // Flip canvas horizontally for front camera mirror effect
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -155,7 +152,7 @@ export const Page7Final = () => {
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ type: 'spring', damping: 20 }}
-                className="w-full paper-card p-8 sm:p-12 rounded-2xl border border-[#EAE3D2] shadow-2xl relative space-y-6 text-center"
+                className="w-full paper-card p-8 sm:p-14 rounded-2xl border border-[#EAE3D2] shadow-2xl relative space-y-6 text-center"
               >
                 {/* Washi Tape */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 washi-tape-sage rounded-xs" />
@@ -164,25 +161,26 @@ export const Page7Final = () => {
                   <Flower2 className="w-6 h-6 animate-pulse-soft" />
                 </div>
 
-                {/* Title: HAPPY BIRTHDAY CHIPS VAAYA ❤️ */}
+                {/* EXACT TITLE: Happy Birthday Chips Vaaya ❤️ */}
                 <div className="py-2 space-y-1">
                   <h3 className="font-sans text-xl sm:text-2xl text-[#6B4E3D] uppercase tracking-widest font-extrabold">
                     {cfg.heading}
                   </h3>
-                  <h1 className="font-handwriting text-5xl sm:text-7xl text-[#F88379] font-bold tracking-wide leading-tight drop-shadow-sm">
+                  <h1 className="font-handwriting text-5xl sm:text-7xl text-[#F88379] font-bold tracking-wide leading-tight drop-shadow-xs">
                     {cfg.nameTitle}
                   </h1>
                 </div>
 
-                {/* Blessing Lines */}
-                <div className="space-y-2 text-[#4A3E3D] font-serif text-xl sm:text-2xl leading-relaxed font-light max-w-lg mx-auto">
-                  {cfg.blessingLines.map((line, idx) => (
-                    <p key={idx}>{line}</p>
+                {/* Wish Paragraphs */}
+                <div className="space-y-3 text-[#4A3E3D] font-serif text-xl sm:text-2xl leading-relaxed font-light max-w-lg mx-auto">
+                  {cfg.wishParagraphs.map((para, idx) => (
+                    <p key={idx}>{para}</p>
                   ))}
                 </div>
 
-                <div className="pt-4 border-t border-[#EAE3D2]">
-                  <p className="font-handwriting text-3xl text-[#F88379] font-bold">
+                {/* Footer Credit */}
+                <div className="pt-6 border-t border-[#EAE3D2]">
+                  <p className="font-handwriting text-2xl text-[#6B4E3D] font-bold">
                     {cfg.footer}
                   </p>
                 </div>
@@ -192,7 +190,7 @@ export const Page7Final = () => {
         </div>
 
         {/* -------------------------------------------------- */}
-        {/* WEBCAM SURPRISE SECTION (After letter is opened) */}
+        {/* WEBCAM SURPRISE SECTION */}
         {/* -------------------------------------------------- */}
         {isEnvelopeOpen && (
           <motion.div
@@ -235,7 +233,7 @@ export const Page7Final = () => {
               </div>
             )}
 
-            {/* 3. LIVE WEBCAM PREVIEW IN POLAROID FRAME */}
+            {/* 3. LIVE WEBCAM PREVIEW */}
             {cameraState === 'live' && (
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -248,18 +246,16 @@ export const Page7Final = () => {
                   {camCfg.smileText}
                 </h3>
 
-                {/* Video Element */}
                 <div className="relative aspect-4/3 w-full bg-[#111] rounded-xs overflow-hidden border border-[#EAE3D2]">
                   <video
                     ref={videoRef}
                     autoPlay
                     playsInline
                     muted
-                    className="w-full h-full object-cover scale-x-[-1]" // Mirror preview
+                    className="w-full h-full object-cover scale-x-[-1]"
                   />
                 </div>
 
-                {/* Capture Button */}
                 <button
                   onClick={handleCapture}
                   className="w-full py-3.5 rounded-full bg-[#789461] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#688252] transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
@@ -285,7 +281,6 @@ export const Page7Final = () => {
                   <span>{camCfg.gotItText}</span>
                 </div>
 
-                {/* Captured Image */}
                 <div className="relative aspect-4/3 w-full bg-[#111] rounded-xs overflow-hidden border border-[#EAE3D2]">
                   <img src={capturedImage} alt="Captured Birthday Memory" className="w-full h-full object-cover" />
                 </div>
@@ -301,7 +296,7 @@ export const Page7Final = () => {
               </motion.div>
             )}
 
-            {/* 5. PERMISSION DENIED FALLBACK STATE */}
+            {/* 5. PERMISSION DENIED FALLBACK */}
             {cameraState === 'denied' && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}

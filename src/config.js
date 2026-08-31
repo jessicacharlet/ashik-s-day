@@ -2,7 +2,7 @@
  * ====================================================================
  * MULTI-PAGE BIRTHDAY CARD CONFIGURATION
  * ====================================================================
- * Single configuration file for all 7 pages!
+ * Single configuration file for all pages & components!
  */
 
 export const BIRTHDAY_CONFIG = {
@@ -36,82 +36,93 @@ export const BIRTHDAY_CONFIG = {
     subtext: "Now let's begin..."
   },
 
-  // PAGE 3: Bible Blessing (Configured for both PAGE_2_BLESSING and PAGE_3_BLESSING for safety)
+  // PAGE 3: Bible Blessing
   PAGE_2_BLESSING: {
-    heading: "Before the birthday wishes... 🤍",
-    subheading: "A Little Blessing For You",
-    lines: [
-      "May the Lord bless you and keep you;",
-      "the Lord make his face shine on you",
-      "and be gracious to you;",
-      "the Lord turn his face toward you",
-      "and give you peace."
+    heading: "A little blessing before we begin 🤍",
+    subheading: "A Blessing For You",
+    verseText: "“May he give you the desire of your heart and make all your plans succeed.”",
+    reference: "— Psalm 20:4",
+    blessingParagraphs: [
+      "For this year ahead, I hope the things you're working toward come together at the right time.",
+      "May you have the wisdom to know what to pursue, the patience to wait when you need to, and the courage to keep going when things don't go as planned.",
+      "May God guide you, protect you, and bless whatever comes next."
     ],
-    reference: "— Numbers 6:24–26",
-    buttonText: "Next →"
+    bottomNote: "Now... enough wisdom for one page. 😂",
+    buttonText: "Let’s continue →"
   },
   PAGE_3_BLESSING: {
-    heading: "Before the birthday wishes... 🤍",
-    subheading: "A Little Blessing For You",
-    lines: [
-      "May the Lord bless you and keep you;",
-      "the Lord make his face shine on you",
-      "and be gracious to you;",
-      "the Lord turn his face toward you",
-      "and give you peace."
+    heading: "A little blessing before we begin 🤍",
+    subheading: "A Blessing For You",
+    verseText: "“May he give you the desire of your heart and make all your plans succeed.”",
+    reference: "— Psalm 20:4",
+    blessingParagraphs: [
+      "For this year ahead, I hope the things you're working toward come together at the right time.",
+      "May you have the wisdom to know what to pursue, the patience to wait when you need to, and the courage to keep going when things don't go as planned.",
+      "May God guide you, protect you, and bless whatever comes next."
     ],
-    reference: "— Numbers 6:24–26",
-    buttonText: "Next →"
+    bottomNote: "Now... enough wisdom for one page. 😂",
+    buttonText: "Let’s continue →"
   },
 
   // PAGE 4: Birthday Reveal
   PAGE_4_BIRTHDAY: {
-    waitText: "Wait...",
-    forgetText: "I almost forgot something...",
-    revealBig: "IT'S YOUR BIRTHDAY!!! 🎉",
+    sequence: [
+      "Wait...",
+      "Another year older.",
+      "Still figuring things out.",
+      "Still somehow surviving. 😂"
+    ],
+    revealBig: "HAPPY BIRTHDAY, ASHIK! 🎉",
     heading: "HAPPY BIRTHDAY",
-    wishesText: "May this year bring you happiness, success, laughter and amazing memories.",
+    paragraphs: [
+      "Hope this year brings you good opportunities, good people, good memories, and enough unexpected moments to keep life interesting.",
+      "May your plans work out, your problems stay manageable, and your bank balance occasionally surprise you. 😂"
+    ],
     buttonText: "Next →"
   },
 
   // PAGE 5: Blow the Candles
   PAGE_5_CAKE: {
-    heading: "Make a Wish 🎂",
-    instruction: "Close your eyes... Make a wish... Now blow the candles! 💨",
-    micButtonText: "Blow the Candles 💨",
+    heading: "One important thing...",
+    ruleText: "Before we continue, there's a birthday rule we cannot ignore.",
+    makeWishBig: "MAKE A WISH. 🎂",
+    secretText: "No, you can't tell me what it is. That's literally against the rules. 😂",
+    micButtonText: "Blow the candles 💨",
     tapButtonText: "Tap to Blow 💨",
-    successHeading: "YOU DID IT! 🎉",
-    successSubtext: "May God make your wish come true. ✨",
+    successHeading: "Wish sent. ✨",
+    successSubtext: "Let's see what happens.",
     buttonText: "Next →"
   },
 
-  // PAGE 6: Funny Surprise Report
+  // PAGE 6: Funny Birthday Report
   PAGE_6_FUNNY: {
-    heading: "Okay... serious wishes are over 😂",
-    reportTitle: "BIRTHDAY BOY REPORT",
+    heading: "BIRTHDAY PERFORMANCE REVIEW 😂",
+    reportTitle: "BIRTHDAY PERFORMANCE REVIEW",
     stats: [
-      { label: "AGE", value: "+1" },
-      { label: "WISDOM", value: "Loading..." },
-      { label: "MONEY", value: "Error 404" },
-      { label: "MATURITY", value: "Not Found" },
-      { label: "CAKE", value: "100%" },
-      { label: "ENERGY", value: "Depends on WiFi 😂" }
+      { label: "Age", value: "+1" },
+      { label: "Wisdom", value: "Updating..." },
+      { label: "Maturity", value: "Still under review" },
+      { label: "Common Sense", value: "Occasionally available" },
+      { label: "Money", value: "Confidential information" },
+      { label: "Sleep Schedule", value: "404 Not Found" },
+      { label: "Questionable Decisions", value: "Excellent performance" }
     ],
-    overallResult: "Still the same guy ❤️",
+    overallTitle: "OVERALL RATING",
+    overallResult: "Still doing surprisingly well. 😂",
     buttonText: "One Last Thing →"
   },
 
-  // PAGE 7: Final Wish (HAPPY BIRTHDAY CHIPS VAAYA ❤️)
+  // PAGE 7: Final Wish (Happy Birthday Chips Vaaya ❤️)
   PAGE_7_FINAL: {
-    heading: "HAPPY BIRTHDAY",
-    nameTitle: "CHIPS VAAYA ❤️",
-    blessingLines: [
-      "May God bless you always,",
-      "guide you in every step,",
-      "and make this year",
-      "one of your best yet. ✨"
+    heading: "Happy Birthday",
+    nameTitle: "Chips Vaaya ❤️",
+    wishParagraphs: [
+      "I hope this year is good to you.",
+      "More opportunities, more good memories, fewer unnecessary problems, and plenty of reasons to laugh.",
+      "May God guide you, protect you, and bless whatever comes next.",
+      "Keep being you. Just maybe make slightly better decisions. 😂"
     ],
-    footer: "Made with love, just for you ♡"
+    footer: "— From someone who took way too much time making this website for you. ❤️"
   },
 
   // WEBCAM SURPRISE SECTION (Page 7 Final Page)

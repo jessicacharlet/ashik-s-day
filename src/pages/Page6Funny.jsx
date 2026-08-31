@@ -31,12 +31,12 @@ export const Page6Funny = () => {
             <Laugh className="w-3.5 h-3.5" />
             <span>Playful Interlude</span>
           </div>
-          <h2 className="font-handwriting text-3xl sm:text-5xl text-[#6B4E3D] font-bold">
+          <h1 className="font-handwriting text-3xl sm:text-5xl text-[#6B4E3D] font-bold">
             {cfg.heading}
-          </h2>
+          </h1>
         </motion.div>
 
-        {/* BIRTHDAY BOY REPORT CARD */}
+        {/* BIRTHDAY PERFORMANCE REVIEW CARD */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -82,7 +82,7 @@ export const Page6Funny = () => {
                   <p className="font-doodle text-xs text-[#789461] font-bold">
                     {stat.label}
                   </p>
-                  <p className="font-handwriting text-2xl text-[#6B4E3D] font-bold">
+                  <p className="font-handwriting text-xl sm:text-2xl text-[#6B4E3D] font-bold">
                     {stat.value}
                   </p>
                 </div>
@@ -92,8 +92,11 @@ export const Page6Funny = () => {
           </div>
 
           {/* Overall Result */}
-          <div className="pt-4 border-t border-[#EAE3D2] text-center bg-[#FCE8DE]/40 p-4 rounded-xl border border-[#F6D7C8]">
-            <p className="font-handwriting text-3xl sm:text-4xl text-[#F88379] font-bold whitespace-pre-line leading-snug">
+          <div className="pt-4 border-t border-[#EAE3D2] text-center bg-[#FCE8DE]/40 p-4 rounded-xl border border-[#F6D7C8] space-y-1">
+            <p className="font-sans text-xs text-[#F88379] font-bold uppercase tracking-widest">
+              {cfg.overallTitle}
+            </p>
+            <p className="font-handwriting text-3xl sm:text-4xl text-[#6B4E3D] font-bold whitespace-pre-line leading-snug">
               {cfg.overallResult}
             </p>
           </div>
