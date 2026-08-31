@@ -32,7 +32,7 @@ export const MusicButton = () => {
           </>
         )}
 
-        {/* Pulse ring when music is playing */}
+        {/* Pulse ring when playing */}
         {isPlaying && (
           <span className="absolute -inset-0.5 rounded-full border border-[#F88379]/50 animate-ping pointer-events-none" />
         )}

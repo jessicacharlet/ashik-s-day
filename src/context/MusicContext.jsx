@@ -1,140 +1,137 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { BIRTHDAY_CONFIG } from '../config';
 
+const YOUTUBE_VIDEO_ID = 'hRr7qRb-7k4'; // "Slipping Through My Fingers"
 const MusicContext = createContext(null);
 
 export const MusicProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
+  const playerRef = useRef(null);
+  const hasInteractedRef = useRef(false);
 
-  // Web Audio API synth fallback refs
-  const synthCtxRef = useRef(null);
-  const synthTimerRef = useRef(null);
-
-  const audioPath = BIRTHDAY_CONFIG.AUDIO.customUrl || '/music/slipping-through-my-fingers.mp3';
-
-  // Initialize single persistent Audio instance once on mount
+  // Load YouTube IFrame API dynamically
   useEffect(() => {
-    const audio = new Audio(audioPath);
-    audio.loop = true;
-    audio.volume = 0.05; // Initial low volume for smooth fade-in
-    audioRef.current = audio;
+    // 1. Function to create player once API is ready
+    const initPlayer = () => {
+      if (window.YT && window.YT.Player) {
+        playerRef.current = new window.YT.Player('youtube-player-container', {
+          height: '1',
+          width: '1',
+          videoId: YOUTUBE_VIDEO_ID,
+          playerVars: {
+            autoplay: 1,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            loop: 1,
+            playlist: YOUTUBE_VIDEO_ID, // Required for loop in YT API
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            enablejsapi: 1,
+            origin: window.location.origin
+          },
+          events: {
+            onReady: (event) => {
+              setIsPlayerReady(true);
+              event.target.setVolume(30); // 30% background volume
+              // Attempt immediate autoplay
+              try {
+                event.target.playVideo();
+              } catch (e) {
+                console.log("Initial autoplay prevented by browser policy:", e);
+              }
+            },
+            onStateChange: (event) => {
+              // event.data === 1 is YT.PlayerState.PLAYING
+              if (event.data === 1) {
+                setIsPlaying(true);
+              } else if (event.data === 2 || event.data === 0) {
+                // YT.PlayerState.PAUSED or ENDED
+                setIsPlaying(false);
+              }
+            }
+          }
+        });
+      }
+    };
+
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      window.onYouTubeIframeAPIReady = () => {
+        initPlayer();
+      };
+    } else {
+      initPlayer();
+    }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (playerRef.current && playerRef.current.destroy) {
+        playerRef.current.destroy();
       }
-      stopSynthFallback();
     };
-  }, [audioPath]);
+  }, []);
 
-  // Smooth Volume Fade-In Helper (Fades up to 0.30 over 1.5 seconds)
-  const fadeInAudio = (targetVolume = 0.30) => {
-    if (!audioRef.current) return;
-    audioRef.current.volume = 0.05;
+  // Global First User Interaction Listener to unlock audio if autoplay was blocked
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (hasInteractedRef.current) return;
 
-    let currentVol = 0.05;
-    const fadeInterval = setInterval(() => {
-      if (audioRef.current && currentVol < targetVolume) {
-        currentVol = Math.min(targetVolume, currentVol + 0.03);
-        audioRef.current.volume = currentVol;
-      } else {
-        clearInterval(fadeInterval);
+      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+        try {
+          playerRef.current.setVolume(30);
+          playerRef.current.playVideo();
+          hasInteractedRef.current = true;
+          setIsPlaying(true);
+        } catch (e) {
+          console.warn("Error playing YouTube video on user interaction:", e);
+        }
       }
-    }, 100);
-  };
 
-  // Web Audio API Soft Ambient Synth Melody (Fallback when MP3 file is absent)
-  const startSynthFallback = () => {
-    try {
-      if (synthCtxRef.current) return;
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
+      // Remove listeners once interacted
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
 
-      const ctx = new AudioCtx();
-      synthCtxRef.current = ctx;
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+    window.addEventListener('keydown', handleFirstInteraction);
 
-      const chords = [
-        [261.63, 329.63, 392.00], // C major
-        [196.00, 246.94, 293.66], // G major
-        [220.00, 261.63, 329.63], // A minor
-        [174.61, 220.00, 261.63]  // F major
-      ];
-      let idx = 0;
-
-      const playChord = () => {
-        if (!synthCtxRef.current || synthCtxRef.current.state === 'closed') return;
-        const now = ctx.currentTime;
-        const notes = chords[idx];
-        idx = (idx + 1) % chords.length;
-
-        notes.forEach((freq) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now);
-
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.exponentialRampToValueAtTime(0.04, now + 1.2);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 4.2);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start(now);
-          osc.stop(now + 4.5);
-        });
-      };
-
-      playChord();
-      synthTimerRef.current = setInterval(playChord, 4400);
-    } catch (e) {
-      console.warn("Synth fallback error:", e);
-    }
-  };
-
-  const stopSynthFallback = () => {
-    if (synthTimerRef.current) {
-      clearInterval(synthTimerRef.current);
-      synthTimerRef.current = null;
-    }
-    if (synthCtxRef.current) {
-      synthCtxRef.current.close();
-      synthCtxRef.current = null;
-    }
-  };
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   // Play Music Function
   const playMusic = () => {
-    if (audioRef.current) {
-      const promise = audioRef.current.play();
-      if (promise !== undefined) {
-        promise
-          .then(() => {
-            fadeInAudio(0.30);
-            setIsPlaying(true);
-          })
-          .catch((err) => {
-            console.log("Audio file play prevented/absent, triggering synth fallback:", err);
-            startSynthFallback();
-            setIsPlaying(true);
-          });
+    if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
+      try {
+        playerRef.current.setVolume(30);
+        playerRef.current.playVideo();
+        setIsPlaying(true);
+      } catch (e) {
+        console.warn("Error calling playVideo:", e);
       }
-    } else {
-      startSynthFallback();
-      setIsPlaying(true);
     }
   };
 
   // Pause Music Function
   const pauseMusic = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+    if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
+      try {
+        playerRef.current.pauseVideo();
+        setIsPlaying(false);
+      } catch (e) {
+        console.warn("Error calling pauseVideo:", e);
+      }
     }
-    stopSynthFallback();
-    setIsPlaying(false);
   };
 
   // Toggle Play / Pause
@@ -147,7 +144,11 @@ export const MusicProvider = ({ children }) => {
   };
 
   return (
-    <MusicContext.Provider value={{ isPlaying, playMusic, pauseMusic, toggleMusic }}>
+    <MusicContext.Provider value={{ isPlaying, isPlayerReady, playMusic, pauseMusic, toggleMusic }}>
+      {/* Hidden YouTube Container */}
+      <div className="fixed top-0 left-0 w-1 h-1 opacity-0 pointer-events-none overflow-hidden z-0">
+        <div id="youtube-player-container" />
+      </div>
       {children}
     </MusicContext.Provider>
   );
