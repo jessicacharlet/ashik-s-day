@@ -1,37 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Heart, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import { BIRTHDAY_CONFIG } from '../config';
 
 export const Page3Postcard = () => {
   const navigate = useNavigate();
-  // Animation states: 'init' | 'dragging' | 'delivered'
-  const [stage, setStage] = useState('init');
+
+  // Explicit Animation States
+  const [isDragging, setIsDragging] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   const myPhoto = BIRTHDAY_CONFIG.MY_PHOTO;
   const friendPhoto = BIRTHDAY_CONFIG.FRIEND_PHOTO;
   const cfg = BIRTHDAY_CONFIG.PAGE_2_POSTCARD;
 
+  // Timeline for Dragging Motion
   useEffect(() => {
-    // 1. Wait 1 second after page opens, then start dragging MY PHOTO from LEFT to RIGHT
-    const t1 = setTimeout(() => setStage('dragging'), 1000);
+    // Start dragging after 800ms
+    const t1 = setTimeout(() => setIsDragging(true), 800);
 
-    // 2. Arrives at destination after dragging
+    // Complete dragging at 4.5 seconds
     const t2 = setTimeout(() => {
-      setStage('delivered');
-      // Automatically navigate to /blessing after delivery!
-      setTimeout(() => navigate('/blessing'), 2200);
+      setAnimationComplete(true);
     }, 4500);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [navigate]);
+  }, []);
 
-  const isDragging = stage === 'dragging';
-  const isDelivered = stage === 'delivered';
+  // Safe Navigation Timer triggered when animation completes
+  useEffect(() => {
+    if (animationComplete) {
+      const navTimer = setTimeout(() => {
+        navigate('/blessing');
+      }, 1800);
+
+      return () => clearTimeout(navTimer);
+    }
+  }, [animationComplete, navigate]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 relative select-none overflow-hidden bg-[#FAF7F2]">
@@ -87,7 +96,7 @@ export const Page3Postcard = () => {
               <motion.div
                 initial={{ x: 0, y: 0, rotate: -4 }}
                 animate={
-                  isDelivered
+                  animationComplete
                     ? {
                         x: typeof window !== 'undefined' && window.innerWidth < 640 ? 110 : 380,
                         y: 0,
@@ -102,13 +111,13 @@ export const Page3Postcard = () => {
                     : { x: 0, y: 0, rotate: -4 }
                 }
                 transition={{
-                  duration: isDragging ? 3.5 : 0.8,
+                  duration: isDragging && !animationComplete ? 3.5 : 0.6,
                   ease: [0.34, 1.56, 0.64, 1] // Spring bounce overshoot physics
                 }}
                 className="relative cursor-default"
               >
                 {/* Motion Trail Particles while dragging */}
-                {isDragging && (
+                {isDragging && !animationComplete && (
                   <div className="absolute inset-0 pointer-events-none">
                     {[...Array(4)].map((_, i) => (
                       <motion.div
@@ -127,7 +136,7 @@ export const Page3Postcard = () => {
                 {/* Polaroid Postcard */}
                 <div
                   className={`bg-[#FFFDF9] p-3 sm:p-4 pb-5 sm:pb-6 rounded-sm border border-[#EAE3D2] transition-shadow duration-300 ${
-                    isDragging ? 'dragging-shadow' : 'paper-lifted'
+                    isDragging && !animationComplete ? 'dragging-shadow' : 'paper-lifted'
                   }`}
                 >
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-5 washi-tape-sage rounded-xs -rotate-2" />
@@ -145,7 +154,7 @@ export const Page3Postcard = () => {
 
             {/* HEART BADGE ON DELIVERED ARRIVAL */}
             <AnimatePresence>
-              {isDelivered && (
+              {animationComplete && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: [0.6, 1.2, 1] }}
@@ -176,15 +185,15 @@ export const Page3Postcard = () => {
         </div>
 
         {/* ================================================== */}
-        {/* DESTINATION MESSAGES */}
+        {/* DESTINATION MESSAGES & FALLBACK CONTINUE BUTTON */}
         {/* ================================================== */}
         <AnimatePresence>
-          {isDelivered && (
+          {animationComplete && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-center space-y-2 pt-2"
+              className="text-center space-y-4 pt-2"
             >
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EBF1E8] border border-[#D1DFC8] text-[#789461] text-sm font-handwriting font-bold">
                 <CheckCircle2 className="w-4 h-4" />
@@ -194,6 +203,17 @@ export const Page3Postcard = () => {
               <p className="font-serif italic text-xl sm:text-2xl text-[#4A3E3D]">
                 "{cfg.subtext}"
               </p>
+
+              {/* FALLBACK BUTTON (Appears after animation finishes) */}
+              <div className="pt-2">
+                <button
+                  onClick={() => navigate('/blessing')}
+                  className="group relative inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#789461] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#688252] transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <span>Continue</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
