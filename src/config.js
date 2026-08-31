@@ -11,7 +11,7 @@ export const BIRTHDAY_CONFIG = {
   BIRTHDAY_YEAR: "2026",
 
   // Photo Cards (Both sit side-by-side on the postcard table!)
-  MY_PHOTO: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800",
+  MY_PHOTO: "/me.jpg",
   FRIEND_PHOTO: "/friend.jpg",
 
   MY_CAPTION: "Me ✨",
