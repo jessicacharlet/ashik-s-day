@@ -3,10 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Sparkles, ArrowRight } from 'lucide-react';
 import { BIRTHDAY_CONFIG } from '../config';
+import { useMusic } from '../context/MusicContext';
 
 export const Page1Loading = () => {
   const navigate = useNavigate();
+  const { playMusic } = useMusic();
   const cfg = BIRTHDAY_CONFIG.PAGE_1_LOADING;
+
+  const handleOpenCard = () => {
+    playMusic();
+    navigate('/blessing');
+  };
 
   const [stepIndex, setStepIndex] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -101,7 +108,7 @@ export const Page1Loading = () => {
             className="pt-2"
           >
             <button
-              onClick={() => navigate('/blessing')}
+              onClick={handleOpenCard}
               className="group relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#F88379] text-white font-handwriting text-2xl font-bold shadow-md hover:bg-[#e76e64] transition-all hover:scale-105 active:scale-95 cursor-pointer"
             >
               <span>{cfg.buttonText}</span>

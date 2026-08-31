@@ -9,7 +9,8 @@ import { Page4Birthday } from './pages/Page4Birthday';
 import { Page5Cake } from './pages/Page5Cake';
 import { Page6Funny } from './pages/Page6Funny';
 import { Page7Final } from './pages/Page7Final';
-import { MusicPlayer } from './components/MusicPlayer';
+import { MusicProvider } from './context/MusicContext';
+import { MusicButton } from './components/MusicButton';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -40,15 +41,17 @@ function AnimatedRoutes() {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-[#FAF7F2] text-[#4A3E3D] relative font-sans antialiased overflow-x-hidden selection:bg-[#FAD6C5] selection:text-[#6B4E3D]">
-        {/* Audio Floating Controller */}
-        <MusicPlayer />
+    <MusicProvider>
+      <BrowserRouter>
+        <div className="min-h-screen bg-[#FAF7F2] text-[#4A3E3D] relative font-sans antialiased overflow-x-hidden selection:bg-[#FAD6C5] selection:text-[#6B4E3D]">
+          {/* Floating Global Audio Controller */}
+          <MusicButton />
 
-        {/* Animated Page Transitions */}
-        <AnimatedRoutes />
-      </div>
-    </BrowserRouter>
+          {/* Animated Page Transitions */}
+          <AnimatedRoutes />
+        </div>
+      </BrowserRouter>
+    </MusicProvider>
   );
 }
 
