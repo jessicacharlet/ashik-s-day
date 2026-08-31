@@ -7,7 +7,28 @@ export const MusicProvider = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const playerRef = useRef(null);
+
+  // Ref to track if playback has been initially started from 55 seconds
+  const hasInitialStartedRef = useRef(false);
   const hasInteractedRef = useRef(false);
+
+  // Helper function to start initial playback at 55s
+  const startPlaybackAt55 = (player) => {
+    if (!player) return;
+    try {
+      player.setVolume(30); // 30% background volume
+      if (!hasInitialStartedRef.current && typeof player.seekTo === 'function') {
+        player.seekTo(55, true);
+        hasInitialStartedRef.current = true;
+      }
+      if (typeof player.playVideo === 'function') {
+        player.playVideo();
+      }
+      setIsPlaying(true);
+    } catch (err) {
+      console.warn("Error starting playback at 55s:", err);
+    }
+  };
 
   // Initialize YouTube IFrame Player API
   useEffect(() => {
@@ -29,7 +50,8 @@ export const MusicProvider = ({ children }) => {
               disablekb: 1,
               fs: 0,
               loop: 1,
-              playlist: YOUTUBE_VIDEO_ID, // Required for looping in YouTube API
+              playlist: YOUTUBE_VIDEO_ID,
+              start: 55, // 55 Seconds start parameter
               modestbranding: 1,
               rel: 0,
               showinfo: 0,
@@ -39,19 +61,27 @@ export const MusicProvider = ({ children }) => {
             events: {
               onReady: (event) => {
                 setIsPlayerReady(true);
-                try {
-                  event.target.setVolume(30); // 30% background volume
-                  event.target.playVideo();
-                } catch (e) {
-                  console.log("Autoplay blocked by browser policy:", e);
-                }
+                // Attempt initial playback at 55s
+                startPlaybackAt55(event.target);
               },
               onStateChange: (event) => {
-                // 1 = PLAYING, 2 = PAUSED, 0 = ENDED
+                // 1 = PLAYING
                 if (event.data === 1) {
                   setIsPlaying(true);
-                } else if (event.data === 2 || event.data === 0) {
+                }
+                // 2 = PAUSED
+                else if (event.data === 2) {
                   setIsPlaying(false);
+                }
+                // 0 = ENDED -> Loop back to 55 seconds
+                else if (event.data === 0) {
+                  setIsPlaying(false);
+                  try {
+                    event.target.seekTo(55, true);
+                    event.target.playVideo();
+                  } catch (e) {
+                    console.warn("Error looping back to 55s:", e);
+                  }
                 }
               }
             }
@@ -65,7 +95,6 @@ export const MusicProvider = ({ children }) => {
       return false;
     };
 
-    // Load API script if not present
     if (!window.YT) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -83,7 +112,6 @@ export const MusicProvider = ({ children }) => {
       createPlayer();
     }
 
-    // Poll to ensure container is ready if API loaded before DOM mount
     checkTimer = setInterval(() => {
       if (!playerRef.current && window.YT && window.YT.Player) {
         if (createPlayer()) {
@@ -104,23 +132,16 @@ export const MusicProvider = ({ children }) => {
     };
   }, []);
 
-  // Global First Interaction Listener to trigger play on first user click if autoplay was blocked
+  // Global First Interaction Listener for browsers blocking autoplay
   useEffect(() => {
     const handleFirstInteraction = () => {
       if (hasInteractedRef.current) return;
+      hasInteractedRef.current = true;
 
-      if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-        try {
-          playerRef.current.setVolume(30);
-          playerRef.current.playVideo();
-          hasInteractedRef.current = true;
-          setIsPlaying(true);
-        } catch (e) {
-          console.warn("Error playing video on user interaction:", e);
-        }
+      if (playerRef.current) {
+        startPlaybackAt55(playerRef.current);
       }
 
-      // Cleanup event listeners
       window.removeEventListener('click', handleFirstInteraction);
       window.removeEventListener('touchstart', handleFirstInteraction);
       window.removeEventListener('pointerdown', handleFirstInteraction);
@@ -142,18 +163,12 @@ export const MusicProvider = ({ children }) => {
 
   // Public Play Command
   const playMusic = () => {
-    if (playerRef.current && typeof playerRef.current.playVideo === 'function') {
-      try {
-        playerRef.current.setVolume(30);
-        playerRef.current.playVideo();
-        setIsPlaying(true);
-      } catch (e) {
-        console.warn("Error in playMusic:", e);
-      }
+    if (playerRef.current) {
+      startPlaybackAt55(playerRef.current);
     }
   };
 
-  // Public Pause Command
+  // Public Pause Command (Does NOT reset playback time)
   const pauseMusic = () => {
     if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
       try {
